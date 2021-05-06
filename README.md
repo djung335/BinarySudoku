@@ -5,9 +5,9 @@ In my implementation, the rules are as follows:
 1. 3 of the same color tile in each row/column is not allowed.
 2. Each row/column must have the same amount of red and blue tiles.
 3. No two rows/columns are the same.
-4. Tiles with lines through them are unchangable.
+4. The color of tiles with lines through them are unchangable.
 
-This game was inspired by a similar one created by Martin Kool (https://0hh1.com/). I implemented the simple graphics for this game through the Northeastern image library.
+This game was inspired by a similar one created by Martin Kool (https://0hh1.com/). I implemented the simple graphics for this game through the Northeastern image library. To change the colors of the tiles, click on them. To reset to a different board, press "r".
 
 Some things I learned from this project:
 1. Large algorithms and functions, if possible, should be split up in order to faciliate readability and testing. As I was working on the function which determines a winning condition for the game, I realized it would be easier to just make separate functions for each condition instead of one giant function that captures them all because if something goes wrong, then it would be tough to figure out where the error is coming from.
