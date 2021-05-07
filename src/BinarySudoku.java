@@ -1,12 +1,14 @@
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javalib.impworld.World;
 import javalib.impworld.WorldScene;
 import javalib.worldimages.*;
 import tester.Tester;
 import javax.swing.Timer;
+
+// Binary Sudoku
+// Created by Daniel Jung
 
 // represents a coordinate on the board
 class Pair {
@@ -19,19 +21,12 @@ class Pair {
 
 }
 
-// represents a cell of the binary sudoku game
+// represents a cell of the Binary Sudoku game
 class Cell {
   int x, y;
-
   boolean permanent;
   int timesClicked;
   Color color;
-
-  // represents the top, right, left, and bottom cells
-  Cell top;
-  Cell left;
-  Cell bottom;
-  Cell right;
 
   Cell(int x, int y, int timesClicked) {
     this.x = x;
@@ -42,6 +37,7 @@ class Cell {
 
   }
 
+  // assigns a color to the tile based on the amount of times it has been clicked
   void assignColor() {
     if (this.timesClicked == 0) {
       this.color = Color.WHITE;
@@ -54,7 +50,8 @@ class Cell {
     }
   }
 
-  // overriding the cell class to show cell equality by their color
+  // determines whether two cells are equal based on the amount of times they have
+  // been clicked on
   public boolean equals(Object o) {
     if (o instanceof Cell) {
       if (this.timesClicked == ((Cell) o).timesClicked) {
@@ -90,7 +87,7 @@ class Cell {
 // represents the main game class
 class BinarySudoku extends World {
   ArrayList<ArrayList<Cell>> board = new ArrayList<ArrayList<Cell>>();
-  // minimum should be 4 by 4
+
   int size;
 
   BinarySudoku(int size) {
@@ -103,7 +100,7 @@ class BinarySudoku extends World {
   void createBoard() {
     ArrayList<ArrayList<Cell>> newBoard = new ArrayList<ArrayList<Cell>>();
 
-    // generate a random
+    // start by generating a random board
 
     for (int row = 0; row < this.size; row++) {
       ArrayList<Cell> newRow = new ArrayList<Cell>();
@@ -117,7 +114,7 @@ class BinarySudoku extends World {
 
     this.board = newBoard;
 
-    // creates a random solution
+    // creates a board with a random solution
     while (!this.winCondition()) {
       this.createBoard();
 
@@ -128,7 +125,7 @@ class BinarySudoku extends World {
   // removes random spots in a board that is already solved.
   void removeRandomSpots() {
 
-    // create the coordinates
+    // create all the coordinates within the board
     ArrayList<Pair> coordinates = new ArrayList<Pair>();
 
     for (int row = 0; row < this.size; row++) {
@@ -139,19 +136,22 @@ class BinarySudoku extends World {
 
     }
 
-    // shuffle the coordinates
+    // shuffle those coordinates
     Collections.shuffle(coordinates);
 
+    // remove all but 7 coordinates
     while (coordinates.size() > 6) {
       coordinates.remove(0);
 
     }
 
+    // for every coordinate left, set their permanent value to true
     for (Pair p : coordinates) {
       this.board.get(p.x).get(p.y).permanent = true;
 
     }
 
+    // update the colors of every other cell.
     for (int row = 0; row < this.size; row++) {
 
       for (int col = 0; col < this.size; col++) {
@@ -163,7 +163,7 @@ class BinarySudoku extends World {
     }
   }
 
-  // we need to check a few things to see if the player has won the game:
+  // determines whether the player has won the game
   boolean winCondition() {
     // first, check the board across the rows to see if there are any three colors
     // in a row
@@ -246,7 +246,7 @@ class BinarySudoku extends World {
 
     }
 
-    // TODO check to see if a row is the same as the next row and return false; if
+    // check to see if a row is the same as the next row and return false if
     // they are the same
 
     for (int row1 = 0; row1 < this.size; row1++) {
@@ -260,7 +260,8 @@ class BinarySudoku extends World {
 
     }
 
-    // checks the columns for column equality
+    // check to see if a column is the same as the next row and return false if
+    // they are the same
 
     for (int col1 = 0; col1 < this.size; col1++) {
       for (int col2 = col1 + 1; col2 < this.size; col2++) {
@@ -287,6 +288,7 @@ class BinarySudoku extends World {
 
   }
 
+  // draws the board
   WorldImage drawBoard() {
     WorldImage whole = new EmptyImage();
     for (int row = 0; row < this.size; row++) {
@@ -300,10 +302,12 @@ class BinarySudoku extends World {
     return whole;
   }
 
+  // draws the statement signifying victory
   WorldImage drawYouWin() {
     return new TextImage("You Win!", 40, Color.BLACK);
   }
 
+  // makes the scene
   public WorldScene makeScene() {
     int width = 500;
     int height = 500;
@@ -325,6 +329,8 @@ class BinarySudoku extends World {
 
   }
 
+  // handles mouse clicks for the game
+  // if you click on a tile, change its color
   public void onMouseClicked(Posn posn) {
 
     int xPos = posn.x / 40;
@@ -354,7 +360,7 @@ class BinarySudoku extends World {
 
   }
 
-  // EFFECT: updates the board to the original board when the key "r" is pressed.
+  // EFFECT: creates a new board when the key "r" is pressed.
   public void onKeyEvent(String ke) {
     if (ke.equals("r")) {
       this.createBoard();
@@ -365,8 +371,10 @@ class BinarySudoku extends World {
 
 }
 
+// to hold all the examples
 class ExamplesBinarySudoku {
 
+  // a 4 x 4 board
   BinarySudoku exampleGame = new BinarySudoku(4);
 
   void testBigBang(Tester t) {
